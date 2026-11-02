@@ -23,25 +23,24 @@ class LinearRegression:
         if self.method == "normal":
             mx = X.mean(axis=0)   # E[x]: array de d
             my = y.mean()         # E[y]: un número
-
+    
             S = np.zeros((d, d))   # Sigma
             c = np.zeros(d)
-
+    
             for j in range(d):
                 for k in range(d):
                     # Cov(x_j, x_k) = E[x_j x_k] - E[x_j] E[x_k]
                     S[j, k] = np.mean(X[:, j] * X[:, k]) - mx[j] * mx[k]
                 # Cov(x_j, y) = E[x_j y] - E[x_j] E[y]
                 c[j] = np.mean(X[:, j] * y) - mx[j] * my
-
+    
             w = np.linalg.lstsq(S, c, rcond=None)[0]
-
+    
             b = my - (mx @ w)
-
+    
             self.coef_ = w          # array de d
             self.intercept_ = b     # número
             return self
-
         if self.method == "gd":
             w = np.zeros(d)
             b = 0.0
@@ -57,6 +56,7 @@ class LinearRegression:
             self.coef_ = w
             self.intercept_ = b
             return self
+            
 
     def predict(self, X):
         X = np.asarray(X, dtype=float)
