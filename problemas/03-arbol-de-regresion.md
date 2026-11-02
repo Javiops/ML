@@ -28,7 +28,7 @@ Se construye recursivamente, empezando con todos los puntos en la raíz (profund
 3. Si no, se prueban todos los **cortes** $(j, t)$:
    - $j$ es una feature, $0 \leq j < d$.
    - Sean $v_1 < v_2 < \dots < v_m$ los valores **distintos** de la columna $j$ entre los puntos de $S$. Los umbrales candidatos son los puntos medios $t = \frac{v_r + v_{r+1}}{2}$, para $r = 1, \dots, m - 1$.
-   - $S_L = \left\{ i \in S : x_{ij} \leq t \right\}$ y $S_R = S \setminus S_L$.
+   - $S_L = \lbrace i \in S : x_{ij} \leq t \rbrace$ y $S_R = S \setminus S_L$.
    - El corte es **válido** si $|S_L| \geq M$ y $|S_R| \geq M$.
    - Su **coste** es $\mathrm{SSE}(S_L) + \mathrm{SSE}(S_R)$.
 4. Si no hay ningún corte válido, o si el de menor coste **no** es estrictamente menor que $\mathrm{SSE}(S)$, es una hoja.
