@@ -21,10 +21,11 @@ class Node:
         self.right = None         # Node
 
 
-def best_split(X, y, min_samples_leaf):
+def best_split(X, y, min_samples_leaf, features=None):
     """Mejor corte de un nodo.
 
     X: matriz (n, d), y: array de n.
+    features: índices de las features que se prueban (None = todas).
     Devuelve (j, t, coste) del corte válido de menor coste, o None si no hay
     ningún corte válido. coste = SSE(izquierda) + SSE(derecha).
     """
@@ -32,7 +33,9 @@ def best_split(X, y, min_samples_leaf):
     y = y - np.mean(y)            # no cambia ningún SSE y evita errores de redondeo
     tot1, tot2 = np.sum(y), np.sum(y ** 2)
     best = None
-    for i in range(d):
+    if features is None:
+        features = range(d)
+    for i in features:
         p = np.argsort(X[:, i])   # O(n log n)
         x_ord = X[p, i]
         y_ord = y[p]
@@ -55,16 +58,47 @@ def best_split(X, y, min_samples_leaf):
     return best
 
 
+def n_features_por_nodo(max_features, d):
+    """Cuántas features se prueban en cada nodo, con las mismas reglas que sklearn."""
+    if max_features is None:
+        return d
+    if max_features == "sqrt":
+        return max(1, int(np.sqrt(d)))
+    if max_features == "log2":
+        return max(1, int(np.log2(d)))
+    if isinstance(max_features, float):
+        return max(1, int(max_features * d))
+    return min(int(max_features), d)
+
+
 class DecisionTreeRegressor:
-    def __init__(self, max_depth=None, min_samples_leaf=1):
+    def __init__(self, max_depth=None, min_samples_leaf=1, max_features=None, random_state=None):
         self.max_depth = max_depth                # None = sin límite
         self.min_samples_leaf = min_samples_leaf
+        self.max_features = max_features          # None = todas (ver n_features_por_nodo)
+        self.random_state = random_state
 
     def fit(self, X, y):
         X = np.asarray(X, dtype=float)   # matriz (n, d)
         y = np.asarray(y, dtype=float)   # array de n
+        self.rng_ = np.random.default_rng(self.random_state)
+        self.m_ = n_features_por_nodo(self.max_features, X.shape[1])
         self.root_ = self._build(X, y, 0)
         return self
+
+    def _features_al_azar(self, X):
+        """Features que se prueban en este nodo: None (todas) o self.m_ elegidas al azar.
+        Como sklearn, las que son constantes en el nodo no cuentan (no se pueden cortar)."""
+        d = X.shape[1]
+        if self.m_ >= d:
+            return None
+        elegidas = []
+        for j in self.rng_.permutation(d):
+            if X[:, j].min() < X[:, j].max():
+                elegidas.append(j)
+                if len(elegidas) == self.m_:
+                    break
+        return elegidas
 
     def _build(self, X, y, depth):
         """Construye recursivamente el subárbol con los puntos (X, y) a profundidad depth.
@@ -76,7 +110,7 @@ class DecisionTreeRegressor:
         if np.var(y) <= np.finfo(float).eps:     # nodo puro: todos los y iguales
             return node
 
-        split = best_split(X, y, self.min_samples_leaf)
+        split = best_split(X, y, self.min_samples_leaf, self._features_al_azar(X))
         if split is None:                        # no hay corte válido
             return node
 
