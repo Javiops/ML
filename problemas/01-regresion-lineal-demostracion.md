@@ -29,9 +29,9 @@ Medias sobre los puntos (todas se calculan solo con los datos):
 | $M$ | matriz con $M_{jk} = E[x_j x_k]$ | $d \times d$ |
 | $E[x_j y]$ | $\frac{1}{n}\sum_i x_{ij}\, y_i$ | número |
 | $E[xy]$ | vector con componentes $E[x_1 y], \dots, E[x_d y]$ | $d \times 1$ |
-| $\operatorname{Cov}(u, v)$ | $E[uv] - E[u]\,E[v]$ | número |
-| $\Sigma$ | **matriz de covarianzas** (no es un sumatorio): $\Sigma_{jk} = \operatorname{Cov}(x_j, x_k)$ | $d \times d$ |
-| $c$ | vector con $c_j = \operatorname{Cov}(x_j, y)$ | $d \times 1$ |
+| $\mathrm{Cov}(u, v)$ | $E[uv] - E[u]\,E[v]$ | número |
+| $\Sigma$ | **matriz de covarianzas** (no es un sumatorio): $\Sigma_{jk} = \mathrm{Cov}(x_j, x_k)$ | $d \times d$ |
+| $c$ | vector con $c_j = \mathrm{Cov}(x_j, y)$ | $d \times 1$ |
 
 ## 1. El problema
 
@@ -111,11 +111,11 @@ $$\left( M - E[x]\, E[x]^T \right) w = E[xy] - E[y]\, E[x]$$
 
 Elemento $(j, k)$ de la matriz de la izquierda:
 
-$$E[x_j x_k] - E[x_j]\, E[x_k] = \operatorname{Cov}(x_j, x_k) = \Sigma_{jk}$$
+$$E[x_j x_k] - E[x_j]\, E[x_k] = \mathrm{Cov}(x_j, x_k) = \Sigma_{jk}$$
 
 Componente $j$ del lado derecho:
 
-$$E[x_j y] - E[y]\, E[x_j] = \operatorname{Cov}(x_j, y) = c_j$$
+$$E[x_j y] - E[y]\, E[x_j] = \mathrm{Cov}(x_j, y) = c_j$$
 
 **Resultado.** $(w, b)$ minimiza el MSE si y solo si
 
@@ -130,17 +130,17 @@ $\Sigma$ y $c$ solo dependen de los datos, así que $\Sigma\, w = c$ es un siste
 
 **Cuándo $\Sigma$ no es invertible.** Para cualquier vector $v$, desarrollando la definición:
 
-$$v^T \Sigma\, v = \sum_{j,k} v_j v_k \operatorname{Cov}(x_j, x_k) = \operatorname{Var}\!\left( \sum_j v_j x_j \right) \geq 0$$
+$$v^T \Sigma\, v = \sum_{j,k} v_j v_k \mathrm{Cov}(x_j, x_k) = \mathrm{Var}\left( \sum_j v_j x_j \right) \geq 0$$
 
 $\Sigma$ es singular si y solo si existe $v \neq 0$ con $\Sigma v = 0$. En ese caso $v^T \Sigma v = 0$, es decir, la combinación de columnas $\sum_j v_j x_j$ tiene varianza $0$: vale lo mismo en todos los puntos. Por ejemplo, dos columnas iguales ($v = e_1 - e_2$) o una columna constante.
 
 ## 8. Comprobación con $d = 1$
 
-Con una sola feature, $\Sigma$ es el número $\operatorname{Var}(x)$ y $c$ es el número $\operatorname{Cov}(x, y)$:
+Con una sola feature, $\Sigma$ es el número $\mathrm{Var}(x)$ y $c$ es el número $\mathrm{Cov}(x, y)$:
 
-$$w = \frac{\operatorname{Cov}(x, y)}{\operatorname{Var}(x)}, \qquad b = E[y] - w\, E[x]$$
+$$w = \frac{\mathrm{Cov}(x, y)}{\mathrm{Var}(x)}, \qquad b = E[y] - w\, E[x]$$
 
-que es la fórmula clásica de la recta de regresión. El caso singular es $\operatorname{Var}(x) = 0$: todos los $x_i$ iguales.
+que es la fórmula clásica de la recta de regresión. El caso singular es $\mathrm{Var}(x) = 0$: todos los $x_i$ iguales.
 
 ## 9. El algoritmo
 
