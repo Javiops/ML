@@ -114,3 +114,13 @@ def test_sin_limite_memoriza_train(pendiente):
     y = rng.normal(size=200)
     m = pendiente(DecisionTreeRegressor().fit, X, y)
     np.testing.assert_allclose(m.predict(X), y, atol=1e-9)
+
+
+def test_xor_parte_con_ganancia_0(pendiente):
+    # Ningún corte de la raíz baja el SSE (media 0.5 a cada lado), pero como sklearn
+    # partimos igualmente y en el nivel siguiente se aciertan los 4 puntos.
+    X = np.array([[0.0, 0.0], [0.0, 1.0], [1.0, 0.0], [1.0, 1.0]])
+    y = np.array([0.0, 1.0, 1.0, 0.0])
+    m = pendiente(DecisionTreeRegressor().fit, X, y)
+    np.testing.assert_allclose(m.predict(X), y)
+    np.testing.assert_allclose(m.predict(X), SkTree(random_state=0).fit(X, y).predict(X))

@@ -69,8 +69,24 @@ class DecisionTreeRegressor:
     def _build(self, X, y, depth):
         """Construye recursivamente el subárbol con los puntos (X, y) a profundidad depth.
         Devuelve su Node raíz."""
-        # TODO (tú)
-        raise NotImplementedError("_build")
+        node = Node(np.mean(y))
+
+        if self.max_depth is not None and depth >= self.max_depth:
+            return node
+        if np.var(y) <= np.finfo(float).eps:     # nodo puro: todos los y iguales
+            return node
+
+        split = best_split(X, y, self.min_samples_leaf)
+        if split is None:                        # no hay corte válido
+            return node
+
+        # Como sklearn: se parte aunque el corte no baje el SSE (ganancia 0).
+        j, t, coste = split
+        node.feature, node.threshold = j, t
+        m = X[:, j] <= t
+        node.left = self._build(X[m], y[m], depth + 1)
+        node.right = self._build(X[~m], y[~m], depth + 1)
+        return node
 
     def predict(self, X):
         X = np.asarray(X, dtype=float)

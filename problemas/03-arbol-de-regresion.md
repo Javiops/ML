@@ -31,7 +31,7 @@ Se construye recursivamente, empezando con todos los puntos en la raíz (profund
    - $S_L = \lbrace i \in S : x_{ij} \leq t \rbrace$ y $S_R = S \setminus S_L$.
    - El corte es **válido** si $|S_L| \geq M$ y $|S_R| \geq M$.
    - Su **coste** es $\mathrm{SSE}(S_L) + \mathrm{SSE}(S_R)$.
-4. Si no hay ningún corte válido, o si el de menor coste **no** es estrictamente menor que $\mathrm{SSE}(S)$, es una hoja.
+4. Si todos los $y_i$ de $S$ son iguales (el nodo es puro), o si no hay ningún corte válido, es una hoja. Como en sklearn, se parte aunque el mejor corte no baje el $\mathrm{SSE}$ (ganancia $0$): en un XOR ningún corte de la raíz mejora, pero el nivel siguiente acierta todo.
 5. Si no, el nodo guarda `feature` $= j$ y `threshold` $= t$ del mejor corte, y sus hijos son el nodo de $S_L$ (`left`) y el de $S_R$ (`right`), los dos con profundidad $h + 1$.
 
 Para predecir un punto $z$ (vector de $d$ números): empiezas en la raíz, vas a `left` si $z_j \leq t$ y a `right` si no, hasta llegar a una hoja, y devuelves su `value`.
@@ -66,7 +66,6 @@ Con fuerza bruta basta para pasar los tests. Si quieres que vaya rápido con $n$
 | media de un array | `np.mean(a)` o `a.mean()` |
 | $\mathrm{SSE}$ de un array `a` | `np.sum((a - a.mean()) ** 2)` (ojo: con `a` vacío, `mean` da aviso) |
 | crear un nodo | `Node(valor)` |
-| comparar floats con margen | `a < b - 1e-12` |
 
 ## Cómo saber si está bien
 
