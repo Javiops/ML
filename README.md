@@ -23,7 +23,7 @@ pytest -rs        # además lista qué módulos siguen pendientes
 | # | Módulo | Enunciado | Estado |
 |---|--------|-----------|--------|
 | 1 | Regresión lineal (ecuación normal + gradient descent) | [01](problemas/01-regresion-lineal.md) | normal ✅, gd ✅ |
-| 2 | Métricas (MAE, MSE, R², accuracy) + `train_test_split` | [02](problemas/02-metricas-y-split.md) | pendiente |
+| 2 | Métricas (MAE, MSE, R², accuracy) + `train_test_split` | [02](problemas/02-metricas-y-split.md) | ✅ |
 | 3 | Árbol de decisión (regresión y clasificación) | — | — |
 | 4 | Random Forest | — | — |
 | 5 | Gradient Boosting | — | — |
