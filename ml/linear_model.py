@@ -20,8 +20,21 @@ class LinearRegression:
         y = np.asarray(y, dtype=float)   # vector (n,)
         n, d = X.shape
 
-        if self.method != "normal":
-            raise NotImplementedError("gd")
+        if self.method == "gd":
+            w = np.zeros(d)
+            b = 0.0
+
+            for _ in range(self.n_iters):
+                r = (X @ w) + b - y          # error de cada punto: array de n
+                bp = 2 * np.mean(r)          # dMSE/db: un número
+                g = 2 / n * (X.T @ r)        # dMSE/dw_j para cada j: array de d
+
+                b -= self.lr * bp
+                w -= self.lr * g
+
+            self.coef_ = w
+            self.intercept_ = b
+            return self
 
         mx = X.mean(axis=0)   # E[x]: array de d
         my = y.mean()         # E[y]: un número
