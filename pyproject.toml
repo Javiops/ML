@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ml"
+version = "0.0.1"
+description = "Librería de Machine Learning desde cero con NumPy"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "scikit-learn>=1.3"]
+
+[tool.setuptools]
+packages = ["ml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
