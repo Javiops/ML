@@ -42,3 +42,37 @@ class RandomForestRegressor:
     def predict(self, X):
         X = np.asarray(X, dtype=float)
         return np.mean([tree.predict(X) for tree in self.estimators_], axis=0)
+
+
+class GradientBoostingRegressor:
+    """F(x) = init_ + learning_rate * (h_1(x) + ... + h_K(x)), con K = n_estimators.
+
+    Enunciado: problemas/05-gradient-boosting.md
+    """
+
+    def __init__(self, n_estimators=100, learning_rate=0.1, max_depth=3,
+                 min_samples_leaf=1, loss="squared_error"):
+        if loss not in ("squared_error", "absolute_error"):
+            raise ValueError("loss tiene que ser 'squared_error' o 'absolute_error'")
+        self.n_estimators = n_estimators
+        self.learning_rate = learning_rate       # eta
+        self.max_depth = max_depth
+        self.min_samples_leaf = min_samples_leaf
+        self.loss = loss
+
+    def fit(self, X, y):
+        X = np.asarray(X, dtype=float)   # matriz (n, d)
+        y = np.asarray(y, dtype=float)   # array de n
+        # Tienes que dejar:
+        #   self.init_       = F_0 (un número)
+        #   self.estimators_ = lista con los K árboles h_1, ..., h_K, con el valor
+        #                      de cada hoja ya cambiado por gamma (paso 3)
+        # TODO (tú)
+        raise NotImplementedError("GradientBoostingRegressor.fit")
+
+    def predict(self, X):
+        X = np.asarray(X, dtype=float)
+        F = np.full(X.shape[0], self.init_)
+        for tree in self.estimators_:
+            F += self.learning_rate * tree.predict(X)
+        return F

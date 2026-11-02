@@ -84,6 +84,15 @@ class DecisionTreeRegressor:
         self.rng_ = np.random.default_rng(self.random_state)
         self.m_ = n_features_por_nodo(self.max_features, X.shape[1])
         self.root_ = self._build(X, y, 0)
+        self.leaves_ = []                # las hojas; la hoja h tiene leaf_id = h
+        pila = [self.root_]
+        while pila:
+            node = pila.pop()
+            if node.feature is None:
+                node.leaf_id = len(self.leaves_)
+                self.leaves_.append(node)
+            else:
+                pila += [node.right, node.left]
         return self
 
     def _features_al_azar(self, X):
@@ -121,6 +130,17 @@ class DecisionTreeRegressor:
         node.left = self._build(X[m], y[m], depth + 1)
         node.right = self._build(X[~m], y[~m], depth + 1)
         return node
+
+    def _hoja(self, x):
+        node = self.root_
+        while node.feature is not None:
+            node = node.left if x[node.feature] <= node.threshold else node.right
+        return node
+
+    def apply(self, X):
+        """Para cada punto, el índice h de la hoja a la que llega (su nodo es self.leaves_[h])."""
+        X = np.asarray(X, dtype=float)
+        return np.array([self._hoja(x).leaf_id for x in X], dtype=int)
 
     def predict(self, X):
         X = np.asarray(X, dtype=float)

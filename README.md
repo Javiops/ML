@@ -26,7 +26,7 @@ pytest -rs        # además lista qué módulos siguen pendientes
 | 2 | Métricas (MAE, MSE, R², accuracy) + `train_test_split` | [02](problemas/02-metricas-y-split.md) | ✅ |
 | 3 | Árbol de regresión | [03](problemas/03-arbol-de-regresion.md) | ✅ |
 | 4 | Random Forest | [04](problemas/04-random-forest.md) | ✅ |
-| 5 | Gradient Boosting | — | — |
+| 5 | Gradient Boosting | [05](problemas/05-gradient-boosting.md) | — |
 
 ## Estructura
 
