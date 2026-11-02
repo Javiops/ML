@@ -24,7 +24,7 @@ pytest -rs        # además lista qué módulos siguen pendientes
 |---|--------|-----------|--------|
 | 1 | Regresión lineal (ecuación normal + gradient descent) | [01](problemas/01-regresion-lineal.md) | normal ✅, gd ✅ |
 | 2 | Métricas (MAE, MSE, R², accuracy) + `train_test_split` | [02](problemas/02-metricas-y-split.md) | ✅ |
-| 3 | Árbol de decisión (regresión y clasificación) | — | — |
+| 3 | Árbol de regresión | [03](problemas/03-arbol-de-regresion.md) | — |
 | 4 | Random Forest | — | — |
 | 5 | Gradient Boosting | — | — |
 
@@ -35,6 +35,7 @@ ml/               # el paquete
   linear_model.py
   metrics.py
   model_selection.py
+  tree.py
 problemas/        # enunciados estilo CF, uno por módulo
 tests/            # tests con pytest, comparando contra sklearn
 ```
