@@ -29,17 +29,24 @@ def best_split(X, y, min_samples_leaf):
     ningún corte válido. coste = SSE(izquierda) + SSE(derecha).
     """
     n, d = X.shape
+    y = y - np.mean(y)            # no cambia ningún SSE y evita errores de redondeo
+    tot1, tot2 = np.sum(y), np.sum(y ** 2)
     best = None
     for i in range(d):
-        p = np.argsort(X[:, i])
+        p = np.argsort(X[:, i])   # O(n log n)
         x_ord = X[p, i]
         y_ord = y[p]
 
-        for k in range(min_samples_leaf, n - min_samples_leaf + 1):
+        s1, s2 = 0.0, 0.0         # suma de y y de y^2 del prefijo
+        for k in range(1, n):     # prefijo = y_ord[:k], sufijo = y_ord[k:], O(1) por k
+            s1 += y_ord[k - 1]
+            s2 += y_ord[k - 1] ** 2
+            if k < min_samples_leaf or n - k < min_samples_leaf:
+                continue
             if x_ord[k - 1] == x_ord[k]:
                 continue
-            pref = np.sum((y_ord[:k] - np.mean(y_ord[:k])) ** 2)
-            suf = np.sum((y_ord[k:] - np.mean(y_ord[k:])) ** 2)
+            pref = s2 - s1 ** 2 / k
+            suf = (tot2 - s2) - (tot1 - s1) ** 2 / (n - k)
 
             if best is None or pref + suf < best[2]:
                 t = (x_ord[k - 1] + x_ord[k]) / 2
