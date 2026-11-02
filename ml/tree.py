@@ -29,8 +29,23 @@ def best_split(X, y, min_samples_leaf):
     ningún corte válido. coste = SSE(izquierda) + SSE(derecha).
     """
     n, d = X.shape
-    # TODO (tú)
-    raise NotImplementedError("best_split")
+    best = None
+    for i in range(d):
+        p = np.argsort(X[:, i])
+        x_ord = X[p, i]
+        y_ord = y[p]
+
+        for k in range(min_samples_leaf, n - min_samples_leaf + 1):
+            if x_ord[k - 1] == x_ord[k]:
+                continue
+            pref = np.sum((y_ord[:k] - np.mean(y_ord[:k])) ** 2)
+            suf = np.sum((y_ord[k:] - np.mean(y_ord[k:])) ** 2)
+
+            if best is None or pref + suf < best[2]:
+                t = (x_ord[k - 1] + x_ord[k]) / 2
+                best = (i, t, pref + suf)
+
+    return best
 
 
 class DecisionTreeRegressor:
