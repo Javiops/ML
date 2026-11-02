@@ -56,7 +56,17 @@ Si un $\arg\min$ tiene varios valores óptimos, vale cualquiera.
 
 ## La idea
 
-$F_{k-1}(x_i)$ es lo que predice el modelo para el punto $i$ antes de añadir el árbol $k$.
+Antes del árbol $k$, junta las predicciones de train en un vector columna $p$ ($n \times 1$), con $p_i = F_{k-1}(x_i)$. La pérdida total de train es una función de esas $n$ variables:
+
+$$J(p) = \sum_{i=1}^{n} L(y_i, p_i)$$
+
+Un paso de gradient descent sobre $p$ (como en el módulo 1) es $p_i \leftarrow p_i - \eta\ \partial J / \partial p_i$. Solo el sumando $i$ depende de $p_i$, así que
+
+$$\frac{\partial J}{\partial p_i} = \frac{\partial L(y_i, p_i)}{\partial p_i} = -r_i, \qquad \text{y el paso es} \qquad p_i \leftarrow p_i + \eta\ r_i$$
+
+O sea, $r$ es menos el gradiente de la pérdida total respecto a las predicciones. Ese paso solo mueve las predicciones de train, así que se entrena un árbol $h$ con los $(x_i, r_i)$, que está definido para cualquier $x$, y el paso pasa a ser $F_k = F_{k-1} + \eta\ h$.
+
+En palabras:
 
 - El **pseudo-residuo** $r_i$ dice hacia dónde mover esa predicción para que la pérdida del punto $i$ baje, y cuánto. Si $r_i > 0$ hay que subirla y si $r_i < 0$ hay que bajarla. Lleva un signo menos porque la derivada apunta hacia donde la pérdida **sube**. Es el gradient descent del módulo 1, pero moviendo las predicciones en vez de los pesos.
 - Las predicciones de train no se pueden mover una a una, porque eso no dice nada de un punto nuevo. Por eso se entrena un árbol que aprende $r$ en función de $x$: así la corrección vale para cualquier $x$.
